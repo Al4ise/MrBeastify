@@ -59,7 +59,22 @@ NSArray *flippableText = @[@23, @37, @46];
 }
 %end
 
+NSBundle *MrBeastifyBundle() {
+    static NSBundle *bundle = nil;
+    static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+        NSString *tweakBundlePath = [[NSBundle mainBundle] pathForResource:@"MrBeastify" ofType:@"bundle"];
+        if (tweakBundlePath)
+            bundle = [NSBundle bundleWithPath:tweakBundlePath];
+        else
+            bundle = [NSBundle bundleWithPath:ROOT_PATH_NS(@"/Library/Application Support/MrBeastify.bundle")];
+    });
+    return bundle;
+}
+
 %ctor {
+	// set tweak bundle path
+	NSBundle *tweakBundle = YouPiPBundle();
 	// set imageCount
 	imageCount = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:ROOT_PATH_NS(@"/Library/Application Support/MrBeastify/") error:nil] count];
 }
